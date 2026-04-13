@@ -4,7 +4,7 @@ using UnityEngine.Scripting.APIUpdating;
 public class Alien : MonoBehaviour
 {
     [Header("Alien Settings")]
-    public float health = 100f; // Porcentaje de vida inicial del alien
+    public float health = 150f; // Porcentaje de vida inicial del alien
     public float speed = 3f;
     public float visionRange = 5f;
     public float damage = 10f;
@@ -13,6 +13,8 @@ public class Alien : MonoBehaviour
 
     [Header("Alien States")]
     public bool isAlive = true; // Estado actual
+    public static bool callAlien = false; // Llamado del alien si encuentra un obstáculo, inicialmente no lo está
+    public static Vector3 positionCall;
 
     private Vector3 destination; // Punto exacto del mapa hacia donde se dirigue el alien
     private float h; // h es el tiempo que dura cada paso de la simulación, esto viene de SimulationManager.secondsPerIteration =1f;
@@ -71,8 +73,22 @@ public class Alien : MonoBehaviour
 
         if (obstacle != null) // Si hay algún obstáculo (amenaza)...
         {
+            Debug.Log("Obstáculo detectado, Modo ataque activado. Analizando situación...");
             Alert(obstacle); // Entonces el alien se pondrá en modo alerta
-        } 
+            callAlien = true; // El llamado es activado
+            positionCall = transform.position; // Registra la posición actual del alien (si mismo)
+        }
+        else if (callAlien) // Si no ve nada pero algún otro alien pidió refuerzos...
+        {
+            destination = positionCall; // Se dirigue a la posición del llamado
+            Debug.Log("Se detectó un llamado de su misma especie. Moviéndose a zona de combate.");
+
+            if (Vector3.Distance(transform.position, destination) < 0.5f) // Si el soldado está cerca de su destino actual (zona de donde vino el llamado)...
+            // Se pregunta si esta a menos 0.5 (este es el margen de error) para saber si ya llegó a ese punto
+            {
+                callAlien = false;  // Se apaga la señal
+            }
+        }
         else // Si no, entonces continuará con su objetivo que es escapar en la nave
         {
             Scaping();
@@ -154,6 +170,14 @@ public class Alien : MonoBehaviour
         destination = obstacle.transform.position;
     }
 
+    public void TakeDamage(float quantify)
+    {
+        // Cuando el alien es atacado, va reduciendo la cantidad de vida
+
+        health -= quantify; // quantify es quien recibe el número de vida que el soldado le quita
+        Debug.Log("Salud del alien: " + health);
+    }
+
     void Scaping()
     {
         // Deben los aliens llegar a la nave para escapar, ese es su objetivo
@@ -167,7 +191,7 @@ public class Alien : MonoBehaviour
             transform.position,
             destination,
             speed * h
-            );
+        );
     }
 
     void CheckState()
@@ -189,5 +213,22 @@ public class Alien : MonoBehaviour
             escapedAliensCounter++; // Se incrementa el contador de fugados
             Debug.Log("Fuga exitosa. Alien abordo de la nave!! Total de fugados: " + escapedAliensCounter);
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // Vista del alien representada en scene
+
+        // Área despejada
+        Gizmos.color = Color.green; 
+        Gizmos.DrawWireSphere(transform.position, visionRange);
+
+        // Obstáculo (Amenaza) detectada
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(destination, 0.2f);
+
+        // Indicación de dirección en la que va
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(transform.position, destination);
     }
 }

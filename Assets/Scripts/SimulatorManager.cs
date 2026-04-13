@@ -13,9 +13,26 @@ public class SimulatorManager : MonoBehaviour // Controlador de todas las entida
     public List<Soldier> soldiers = new List<Soldier>();
     public List<LaserTower> laserTowers = new List<LaserTower>();
 
+    //Ajustes de población (detectará los prefabs de las entidades para que el usuario pueda agregar los que quiera a la simulación)
+    public GameObject alienPrefab;
+    public GameObject soldierPrefab; 
+    public int numberAliens;
+    public int numberSoldiers;
+
     void Start()
     {
-        // Primero buscará los objetos que tengan el script de la entidad, agregándolos a su respectiva lista
+        // Primero se crean las entidades
+        for(int i = 0; i < numberAliens; i++)
+        {
+            Instantiate(alienPrefab, Vector3.zero, Quaternion.identity); // Ubica la entidad según las indicaciones de su script
+        }
+
+        for (int i = 0; i < numberSoldiers; i++)
+        {
+            Instantiate(soldierPrefab, Vector3.zero, Quaternion.identity); // Ubica la entidad según las indicaciones de su script
+        }
+
+        // Luego, buscará los objetos que tengan el script de la entidad, agregándolos a su respectiva lista
         Alien[] foundAliens = FindObjectsByType<Alien>(FindObjectsSortMode.InstanceID);
         aliens = new List<Alien>(foundAliens);
 
