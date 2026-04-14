@@ -434,7 +434,7 @@ MonoBehaviour:
   alienPrefab: {fileID: 6875664988888139305, guid: dc0142a64af18394f806978693e7ba9d, type: 3}
   soldierPrefab: {fileID: 9029918054858276177, guid: d0c2c5e145ffcab4b88deb370d9e64e8, type: 3}
   numberAliens: 5
-  numberSoldiers: 3
+  numberSoldiers: 5
 --- !u!4 &1377148252
 Transform:
   m_ObjectHideFlags: 0

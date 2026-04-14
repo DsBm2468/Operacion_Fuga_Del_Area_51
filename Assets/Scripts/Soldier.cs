@@ -47,6 +47,7 @@ public class Soldier : MonoBehaviour
         if (health <= 0) // Si el estado de salud del soldado es menor a 0...
         {
             isAlive = false; // El soldado fue eliminado
+            Debug.Log("<color=red> SOLDADO ELIMINADO</color>");
             Destroy(gameObject);
         }
         else if (health < 30) // Si el estado de salud del soldado es crítico (es menor a 30)...
@@ -71,7 +72,7 @@ public class Soldier : MonoBehaviour
             float yRandom = Random.Range(-5f, 5f);
 
             destination = new Vector3(xRandom, yRandom, 0);
-            Debug.Log("Área patrullada libre de aliens. Reposicionandose");
+            Debug.Log("<color=green> Área patrullada libre de aliens. Reposicionándose... </color>");
         }
 
         // Durante el patrullaje, el soldado puede encontrar actividad sostechosa
@@ -80,7 +81,7 @@ public class Soldier : MonoBehaviour
         
         if (alienHit != null) // Si en la zona se detectó algo...
         {
-            Debug.Log("Extraterrestre detectado, Modo ataque activado. Analizando situación...");
+            Debug.Log("<color=yellow> Extraterrestre detectado, Modo ataque activado. Analizando situación...</color>");
             CheckWeapons(alienHit.gameObject);
         }
         else // Si no, entonces no hay nada alrededor
@@ -90,7 +91,7 @@ public class Soldier : MonoBehaviour
             if (HelpSignal) // Si la señal de auxilio está activada...
             {
                 destination = positionHelp; // Se dirigue a la posición del llamado
-                Debug.Log("Se detectó una señal de auxilio. Moviéndose a zona de combate.");
+                Debug.Log("<color=yellow> Se detectó una señal de auxilio. Moviéndose a zona de combate.</color>");
             }
         }
     }
@@ -101,12 +102,12 @@ public class Soldier : MonoBehaviour
 
         if (munition > 4) // Si está en un estado crítico (Menos de 4 balas)...
         {
-            Debug.Log("Munición suficiente. Verificar cantidad de aliens...");
+            Debug.Log("<color=yellow> Munición suficiente. Verificar cantidad de aliens...</color>");
             NumberOfAliens(alienHit);
         }
         else
         {
-            Debug.Log("Munición insuficiente. Inicia retirada táctica para recargar");
+            Debug.Log("<color=yellow> Munición insuficiente. Inicia retirada táctica para recargar</color>");
             TacticalRetreat();
         }
     }
@@ -150,6 +151,14 @@ public class Soldier : MonoBehaviour
         return founderSoldiers.Length;
     }
 
+    public void TakeDamageSoldier(float quantifyDamage)
+    {
+        // Cuando el soldado es atacado, va reduciendo la cantidad de vida
+
+        health -= quantifyDamage; // quantifyDamage es quien recibe el número de vida que el alien le quita
+        Debug.Log("<color=orange> Salud del soldado: </color>" + health);
+    }
+
     void SingleCombat(GameObject alienHit)
     {
         // luego de decidir que va a atacar por su cuenta, se dirigue al alien detectado
@@ -168,7 +177,7 @@ public class Soldier : MonoBehaviour
             }
             else // Si en pleno combate se queda con pocas balas (estado crítico)...
             {
-                Debug.Log("Se le acabaron las balas en pleno combate. Inicia Retirada táctica");
+                Debug.Log("<color=yellow> Se le acabaron las balas en pleno combate. Inicia Retirada táctica </color>");
                 TacticalRetreat();
             }
         }
@@ -190,7 +199,7 @@ public class Soldier : MonoBehaviour
                 int totalSoldiersCombating = CallBackup();
                 currentDamage = damage * totalSoldiersCombating;
 
-                scriptAlien.TakeDamage(damage); // Se le otorga los puntos de daño que el soldado hace
+                scriptAlien.TakeDamage(currentDamage); // Se le otorga los puntos de daño que el soldado hace
                 munition--; // Gastando munición en el proceso
                 Debug.Log("Combate en proceso... " + totalSoldiersCombating + " soldados están atacando." + "Munición restante: " + munition);
             }
@@ -218,10 +227,7 @@ public class Soldier : MonoBehaviour
             if (Vector3.Distance(transform.position, destination) < 0.5f) // Si el soldado está cerca de su destino actual (torre láser (base))...
             // Se pregunta si esta a menos 0.5 (este es el margen de error) para saber si ya llegó a ese punto
             {
-                if (health < 30) health = 100f; // Si la salud del soldado está critica, se la recupera
-                if (munition <= 4) munition = 15; // Si la cantidad de municiones del soldado está critica, se la recupera
-
-                Debug.Log("Soldado rebastecido en la torre.");
+                Debug.Log("Soldado esperando reabastecimiento en la torre.");
             }
         }
     }

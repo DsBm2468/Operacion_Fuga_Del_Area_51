@@ -73,7 +73,7 @@ public class Alien : MonoBehaviour
 
         if (obstacle != null) // Si hay algún obstáculo (amenaza)...
         {
-            Debug.Log("Obstáculo detectado, Modo ataque activado. Analizando situación...");
+            Debug.Log("<color=yellow> Obstáculo detectado, Modo ataque activado. Analizando situación...</color>");
             Alert(obstacle); // Entonces el alien se pondrá en modo alerta
             callAlien = true; // El llamado es activado
             positionCall = transform.position; // Registra la posición actual del alien (si mismo)
@@ -81,7 +81,7 @@ public class Alien : MonoBehaviour
         else if (callAlien) // Si no ve nada pero algún otro alien pidió refuerzos...
         {
             destination = positionCall; // Se dirigue a la posición del llamado
-            Debug.Log("Se detectó un llamado de su misma especie. Moviéndose a zona de combate.");
+            Debug.Log("<color=yellow> Se detectó un llamado de su misma especie. Moviéndose a zona de combate.</color>");
 
             if (Vector3.Distance(transform.position, destination) < 0.5f) // Si el soldado está cerca de su destino actual (zona de donde vino el llamado)...
             // Se pregunta si esta a menos 0.5 (este es el margen de error) para saber si ya llegó a ese punto
@@ -101,7 +101,7 @@ public class Alien : MonoBehaviour
 
         if (obstacleHit != null) // Si en la zona se detectó algo...
         {
-            Debug.Log("Amenaza detectada");
+            Debug.Log("<color=yellow> Amenaza detectada </color>");
             return obstacleHit.gameObject; // Entonces entra el objeto encontrado (en este punto aún no se determina que es exactamente)
         }   
         else // Si no, entonces no hay nada alrededor
@@ -117,21 +117,21 @@ public class Alien : MonoBehaviour
         
         if (closeAliens > 1) // Revisa cuantos aliados tiene el alien cerca, si hay aunque sea uno...
         {
-            GroupAttack();
+            GroupAttack(obstacle);
         }
         else
         {
-            SingleAttack();
+            SingleAttack(obstacle);
         }
 
-        if (obstacle.CompareTag("LaserTower"))
-        {
-            AttackTower(obstacle);
-        }
-        else if (obstacle.CompareTag("Soldier"))
-        {
-            AttackSoldier(obstacle);
-        }
+        //if (obstacle.CompareTag("LaserTower"))
+        //{
+        //    AttackTower(obstacle);
+        //}
+        //else if (obstacle.CompareTag("Soldier"))
+        //{
+        //    AttackSoldier(obstacle);
+        //}
     }
 
     int countCloseAliens()
@@ -142,20 +142,40 @@ public class Alien : MonoBehaviour
         return founderAllies.Length;
     }
 
-    void GroupAttack()
+    void GroupAttack(GameObject obstacle)
     {
         // El daño provocado depende de la cantidad de aliados
         int totalAliensAtacking = countCloseAliens();
         currentDamage = damage * totalAliensAtacking;
 
         Debug.Log(totalAliensAtacking + "aliens están atacando. Daño total provocado = " + currentDamage);
+
+        // Se define cual es la amenaza
+        if (obstacle.CompareTag("LaserTower"))
+        {
+            AttackTower(obstacle);
+        }
+        else if (obstacle.CompareTag("Soldier"))
+        {
+            AttackSoldier(obstacle);
+        }
     }
 
-    void SingleAttack()
+    void SingleAttack(GameObject obstacle)
     {
         // Daño provocado por un solo alien
         currentDamage = damage;
         Debug.Log("Alien ataca individualmente. Daño realizado = " + currentDamage);
+
+        // Se define cual es la amenaza
+        if (obstacle.CompareTag("LaserTower"))
+        {
+            AttackTower(obstacle);
+        }
+        else if (obstacle.CompareTag("Soldier"))
+        {
+            AttackSoldier(obstacle);
+        }
     }
 
     void AttackTower(GameObject obstacle)
@@ -168,6 +188,23 @@ public class Alien : MonoBehaviour
     {
         // Se dirigue(n) al soldado para matarlo
         destination = obstacle.transform.position;
+
+        //Si el alien está lo suficientemente cerca de la distancia de combate...
+        if (Vector3.Distance(transform.position, destination) < 1.5f)
+        // Se pregunta si esta a menos 1.5 (este es el margen de error, se usa este valor ya que de esta forma lo detecta mejor, 0.5 es el centro del collider)
+        // para saber si ya llegó a ese punto
+        {
+            // Entonces le quita vida al soldado
+
+            // Se crea una variable temporal para acceder a la información de salud actual del soldado, de esta manera se define hasta que momento se atacará
+            Soldier scriptSoldier = obstacle.GetComponent<Soldier>();
+            
+            if (scriptSoldier != null && scriptSoldier.isAlive)
+            {
+                scriptSoldier.TakeDamageSoldier(currentDamage); // Se llama la función que detecta el estado del soldado
+            }
+        }
+            //if 
     }
 
     public void TakeDamage(float quantify)
@@ -175,7 +212,7 @@ public class Alien : MonoBehaviour
         // Cuando el alien es atacado, va reduciendo la cantidad de vida
 
         health -= quantify; // quantify es quien recibe el número de vida que el soldado le quita
-        Debug.Log("Salud del alien: " + health);
+        Debug.Log("<color=orange> Salud del alien: </color>" + health);
     }
 
     void Scaping()
@@ -201,6 +238,7 @@ public class Alien : MonoBehaviour
         if (health <= 0) // Si el estado de salud del alien es menor a 0...
         {
             isAlive = false; // El alien fue eliminado
+            Debug.Log("<color=red> ALIEN ELIMINADO</color>");
             Destroy(gameObject);
         }
 
@@ -211,7 +249,7 @@ public class Alien : MonoBehaviour
         {
             isAlive = false; // Se desactiva sus estados para que permanezca estático en su puesto nuevo dentro de la nave, además esto hace que el contador solo cuente una vez
             escapedAliensCounter++; // Se incrementa el contador de fugados
-            Debug.Log("Fuga exitosa. Alien abordo de la nave!! Total de fugados: " + escapedAliensCounter);
+            Debug.Log("<color=green> Fuga exitosa. Alien abordo de la nave!! Total de fugados: </color>" + escapedAliensCounter);
         }
     }
 

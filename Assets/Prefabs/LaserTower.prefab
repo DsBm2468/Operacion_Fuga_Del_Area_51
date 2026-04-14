@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6051544251371747788}
   - component: {fileID: 4545922471808114219}
   - component: {fileID: 6494608275627819249}
+  - component: {fileID: 1654582095343969865}
   m_Layer: 7
   m_Name: LaserTower
   m_TagString: LaserTower
@@ -128,3 +129,21 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.49999997
+--- !u!114 &1654582095343969865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8807937122701223624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 260d7d6521580484a9326632ee0440bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LaserTower
+  resistance: 200
+  energy: 100
+  visionRange: 7
+  damage: 15
+  munition: 40
+  isStable: 1
