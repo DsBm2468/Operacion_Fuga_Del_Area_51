@@ -3,16 +3,26 @@ using UnityEngine;
 public class LaserTower : MonoBehaviour
 {
     [Header("LaserTower Settings")]
-    public float resistance = 200f; // Resistencia de la torre
+    public float resistance = 150f; // Resistencia de la torre
     public float energy = 100f; // Energía de la torre (No recargable)
-    public float visionRange = 7f; // Alcance de detección y disparo
+    public float visionRange = 10f; // Alcance de detección y disparo
     public float damage = 15f;
     public int munition = 40; // Munición estándar del soldado, sin embargo, al inicio, la cantidad de munición será al azar (sin salirse de este rango)
+
+    [Header("Alien visual")]
+    public Sprite spriteNormal;
+    public Sprite spriteDestroyed;
+    private SpriteRenderer sr;
 
     [Header("LaserTower States")]
     public bool isStable = true;
 
     private float h; // h es el tiempo que dura cada paso de la simulación, esto viene de SimulationManager.secondsPerIteration =1f;
+
+    void Start()
+    {
+        sr = GetComponent<SpriteRenderer>();
+    }
 
     public void Simulate(float h)
     {
@@ -31,9 +41,11 @@ public class LaserTower : MonoBehaviour
         if (resistance <= 0)
         {
             isStable = false; // Entonces la torre fue destruida
+            sr.sprite = spriteDestroyed;
             Debug.Log("<color=red> LA TORRE HA SIDO DESTRUIDA :( </color>");
         } else 
         {
+            sr.sprite = spriteNormal;
             ScanPerimeter(); // Si no, entonces se pondrá a vigilar la zona
         }
     }

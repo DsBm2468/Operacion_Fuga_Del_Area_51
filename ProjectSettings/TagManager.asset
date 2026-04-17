@@ -9,6 +9,7 @@ TagManager:
   - Soldier
   - LaserTower
   - Alien
+  - DesertZone
   layers:
   - Default
   - TransparentFX

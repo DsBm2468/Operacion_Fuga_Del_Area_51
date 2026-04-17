@@ -28,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 6875664988888139305}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.75, y: 2.29, z: 0}
-  m_LocalScale: {x: 3.5, y: 3.5, z: 3.5}
+  m_LocalPosition: {x: -13.34, y: -1.5536122, z: 0}
+  m_LocalScale: {x: 8.674938, y: 8.674938, z: 8.674938}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -81,10 +81,10 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 10
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 0.22419119, g: 0.952302, b: 0.06561899, a: 1}
+  m_Sprite: {fileID: -3044146112775732830, guid: 22388c5fb8c118b4bbe2955f5c7ac666, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -123,7 +123,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -142,8 +142,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Alien
   health: 150
-  speed: 3
+  speed: 4
   visionRange: 5
   damage: 10
   currentDamage: 0
+  spriteNormal: {fileID: -3044146112775732830, guid: 22388c5fb8c118b4bbe2955f5c7ac666, type: 3}
+  spriteAction: {fileID: -7884911954922719953, guid: 05d47d2da8861b74d8a21df699d90f62, type: 3}
   isAlive: 1

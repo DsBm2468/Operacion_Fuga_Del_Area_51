@@ -5,11 +5,16 @@ public class Alien : MonoBehaviour
 {
     [Header("Alien Settings")]
     public float health = 150f; // Porcentaje de vida inicial del alien
-    public float speed = 3f;
+    public float speed = 4f;
     public float visionRange = 5f;
     public float damage = 10f;
     public float currentDamage;
     public static int escapedAliensCounter = 0; // Contador de aliens que escaparon con éxito, inicialmente será 0
+
+    [Header("Alien visual")]
+    public Sprite spriteNormal;
+    public Sprite spriteAction;
+    private SpriteRenderer sr;
 
     [Header("Alien States")]
     public bool isAlive = true; // Estado actual
@@ -25,6 +30,9 @@ public class Alien : MonoBehaviour
     private void Start()
     {
         // Interacciones iniciales del alien en la simulación
+
+        sr = GetComponent<SpriteRenderer>();
+        sr.sprite = spriteNormal;
 
         spaceShip = GameObject.FindGameObjectWithTag("SpaceShip"); // Busca la nave en la escena por su nombre (etiqueta)
         area51 = GameObject.FindGameObjectWithTag("Area51"); // Busca el área 51 en la escena por su nombre (etiqueta)
@@ -73,11 +81,22 @@ public class Alien : MonoBehaviour
 
         if (obstacle != null) // Si hay algún obstáculo (amenaza)...
         {
+            LaserTower tower = obstacle.GetComponent<LaserTower>();
+            if (tower != null && !tower.isStable)
+            {
+                Debug.Log("Esta torre ya fue destruida.");
+                obstacle = null; // Forzamos a que ignore la torre muerta
+            }
+        }
+
+        if (obstacle != null) // Si hay algún obstáculo (amenaza)...
+        {
             Debug.Log("<color=yellow> Obstáculo detectado, Modo ataque activado. Analizando situación...</color>");
             Alert(obstacle); // Entonces el alien se pondrá en modo alerta
             callAlien = true; // El llamado es activado
             positionCall = transform.position; // Registra la posición actual del alien (si mismo)
         }
+
         else if (callAlien) // Si no ve nada pero algún otro alien pidió refuerzos...
         {
             destination = positionCall; // Se dirigue a la posición del llamado
@@ -181,12 +200,30 @@ public class Alien : MonoBehaviour
     void AttackTower(GameObject obstacle)
     {
         // Se dirigue(n) a la torre para destruirla
+        sr.sprite = spriteAction;
         destination = obstacle.transform.position;
+
+        //Si el alien está lo suficientemente cerca de la distancia de combate...
+        if (Vector3.Distance(transform.position, destination) < 1.5f)
+        // Se pregunta si esta a menos 1.5 (este es el margen de error, se usa este valor ya que de esta forma lo detecta mejor, 0.5 es el centro del collider)
+        // para saber si ya llegó a ese punto
+        {
+            // Entonces le quita resistencia a la torre
+
+            // Se crea una variable temporal para acceder a la información de salud actual del soldado, de esta manera se define hasta que momento se atacará
+            LaserTower scriptTower = obstacle.GetComponent<LaserTower>();
+
+            if (scriptTower != null && scriptTower.isStable)
+            {
+                scriptTower.TakeDamageTower(currentDamage); // Se llama la función que detecta el estado de la torre
+            }
+        }
     }
 
     void AttackSoldier(GameObject obstacle)
     {
         // Se dirigue(n) al soldado para matarlo
+        sr.sprite = spriteAction;
         destination = obstacle.transform.position;
 
         //Si el alien está lo suficientemente cerca de la distancia de combate...
@@ -204,7 +241,6 @@ public class Alien : MonoBehaviour
                 scriptSoldier.TakeDamageSoldier(currentDamage); // Se llama la función que detecta el estado del soldado
             }
         }
-            //if 
     }
 
     public void TakeDamage(float quantify)
@@ -218,8 +254,8 @@ public class Alien : MonoBehaviour
     void Scaping()
     {
         // Deben los aliens llegar a la nave para escapar, ese es su objetivo
-
-            destination = spaceShip.transform.position; // Entonces se dirigirán a ella
+        sr.sprite = spriteNormal;
+        destination = spaceShip.transform.position; // Entonces se dirigirán a ella
     }
 
     void Move()

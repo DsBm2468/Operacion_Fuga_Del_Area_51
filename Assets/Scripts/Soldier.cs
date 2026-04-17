@@ -5,11 +5,16 @@ public class Soldier : MonoBehaviour
 {
     [Header("Soldier Settings")]
     public float health = 100f; // Porcentaje de vida inicial del alien
-    public float speed = 2.5f;
+    public float speed = 7.5f;
     public float visionRange = 5f;
     public float damage = 13f;
     public float currentDamage;
     public int munition = 15; // Munición estándar del soldado, sin embargo, al inicio, la cantidad de munición será al azar (sin salirse de este rango)
+
+    [Header("Alien visual")]
+    public Sprite spriteNormal;
+    public Sprite spriteAction;
+    private SpriteRenderer sr;
 
     [Header("Soldier States")]
     public bool isAlive = true; // Estado actual
@@ -21,6 +26,9 @@ public class Soldier : MonoBehaviour
 
     void Start()
     {
+        sr = GetComponent<SpriteRenderer>();
+        sr.sprite = spriteNormal;
+
         // Inicialmente, la cantidad de munición del soldado será distribuida al azar para que así la batalla sea más equilibrada
         munition = Random.Range(5, 16);
 
@@ -161,6 +169,7 @@ public class Soldier : MonoBehaviour
 
     void SingleCombat(GameObject alienHit)
     {
+        sr.sprite = spriteAction;
         // luego de decidir que va a atacar por su cuenta, se dirigue al alien detectado
         destination = alienHit.transform.position;
 
@@ -185,6 +194,7 @@ public class Soldier : MonoBehaviour
 
     void GroupCombat(GameObject alienHit)
     {
+        sr.sprite = spriteAction;
         // luego de decidir que va a atacar por su cuenta, se dirigue al alien detectado
         destination = alienHit.transform.position;
 

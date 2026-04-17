@@ -83,8 +83,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.4233963, g: 0.28842458, b: 0.032242056, a: 1}
+  m_Sprite: {fileID: 2405118050013788914, guid: e0cce65eea7f047438982ed17bc85f9a, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -123,7 +123,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -141,9 +141,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 260d7d6521580484a9326632ee0440bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LaserTower
-  resistance: 200
+  resistance: 150
   energy: 100
-  visionRange: 7
+  visionRange: 10
   damage: 15
   munition: 40
+  spriteNormal: {fileID: 2405118050013788914, guid: e0cce65eea7f047438982ed17bc85f9a, type: 3}
+  spriteDestroyed: {fileID: 7301752404868379072, guid: 0d80389d881c17b41b9b9c5beb9434d6, type: 3}
   isStable: 1
